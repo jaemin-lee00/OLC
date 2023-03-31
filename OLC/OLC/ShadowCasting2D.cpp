@@ -134,8 +134,8 @@ private :
 							}
 						}
 
-						//If this cell has no western neighbour, It needs a wersten edge
-						if (!world[w].exist) {
+						//If this cell has no nothern neighbour, It needs a northern edge
+						if (!world[n].exist) {
 
 							//It can either extend it from its northern neighbour if they have
 							//one , or It can start a new one.
