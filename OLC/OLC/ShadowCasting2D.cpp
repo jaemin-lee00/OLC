@@ -139,22 +139,22 @@ private :
 
 							//It can either extend it from its northern neighbour if they have
 							//one , or It can start a new one.
-							if (world[n].edge_exist[WEST]) {
+							if (world[w].edge_exist[NORTH]) {
 
 								//Northern neighbour has a western edge, so grow it downwards
-								vecEdges[world[n].edge_id[WEST]].ey += fBlockWidth;
-								world[i].edge_id[WEST] = world[n].edge_id[WEST];
-								world[i].edge_exist[WEST] = true;
+								vecEdges[world[w].edge_id[NORTH]].ex += fBlockWidth;
+								world[i].edge_id[NORTH] = world[w].edge_id[NORTH];
+								world[i].edge_exist[NORTH] = true;
 							}
 							else {
 
-								//Northern neighbour does not have one, so create one
+								//Western neighbour does not have one, so create one
 								sEdge edge;
 								edge.sx = (sx + x) * fBlockWidth;
 								edge.sy = (sy + y) * fBlockWidth;
 
-								edge.ex = edge.sx;
-								edge.ey = edge.sy + fBlockWidth;
+								edge.ex = edge.sx + fBlockWidth;
+								edge.ey = edge.sy;
 
 								// Add edge to Polygon Pool
 								int edge_id = vecEdges.size();
