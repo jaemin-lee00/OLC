@@ -137,11 +137,11 @@ private :
 						//If this cell has no nothern neighbour, It needs a northern edge
 						if (!world[n].exist) {
 
-							//It can either extend it from its northern neighbour if they have
+							//It can either extend it from its western neighbour if they have
 							//one , or It can start a new one.
 							if (world[w].edge_exist[NORTH]) {
 
-								//Northern neighbour has a western edge, so grow it downwards
+								//Western neighbour has a western edge, so grow it eastwards
 								vecEdges[world[w].edge_id[NORTH]].ex += fBlockWidth;
 								world[i].edge_id[NORTH] = world[w].edge_id[NORTH];
 								world[i].edge_exist[NORTH] = true;
@@ -161,10 +161,43 @@ private :
 								vecEdges.push_back(edge);
 
 								// Update tile information with edge information
-								world[i].edge_id[WEST] = edge_id;
-								world[i].edge_exist[WEST] = true;
+								world[i].edge_id[NORTH] = edge_id;
+								world[i].edge_exist[NORTH] = true;
 							}
 						}
+
+						//If this cell has no southern neighbour, It needs a southern edge
+						if (!world[s].exist) {
+
+							//It can either extend it from its western neighbour if they have
+							//one , or It can start a new one.
+							if (world[w].edge_exist[SOUTH]) {
+
+								//Western neighbour has a western edge, so grow it eastwards
+								vecEdges[world[w].edge_id[SOUTH]].ex += fBlockWidth;
+								world[i].edge_id[SOUTH] = world[w].edge_id[SOUTH];
+								world[i].edge_exist[SOUTH] = true;
+							}
+							else {
+
+								//Western neighbour does not have one, so create one
+								sEdge edge;
+								edge.sx = (sx + x) * fBlockWidth;
+								edge.sy = (sy + y + 1) * fBlockWidth;
+
+								edge.ex = edge.sx + fBlockWidth;
+								edge.ey = edge.sy;
+
+								// Add edge to Polygon Pool
+								int edge_id = vecEdges.size();
+								vecEdges.push_back(edge);
+
+								// Update tile information with edge information
+								world[i].edge_id[SOUTH] = edge_id;
+								world[i].edge_exist[SOUTH] = true;
+							}
+						}
+
 					}
 				}
 			}
