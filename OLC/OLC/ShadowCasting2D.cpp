@@ -227,6 +227,12 @@ public :
 			world[i].exist = !world[i].exist;
 		}
 
+		// Take a region of "TileMap" and convert it to "PolyMap" - This is done
+		// every frame here, but could be a pre-preocessing stage depending on
+		// how your final application interacts with tilemaps
+
+		ConvertTileMapToPolyMap(0, 0, 40, 30, fBlockWidth, nWorldWidth);
+
 		//Drawing
 
 		Clear(olc::BLACK);
@@ -239,6 +245,12 @@ public :
 				if (world[y * nWorldWidth + x].exist)
 					FillRect(x * fBlockWidth, y * fBlockWidth, fBlockWidth, fBlockWidth, olc::BLUE);
 			}
+		}
+
+		//Draw Edges from PolyMap
+		for (auto& e : vecEdges) {
+			
+			DrawLine(e.sx, e.sy, e.ex, e.ey);
 		}
 
 		return true;
