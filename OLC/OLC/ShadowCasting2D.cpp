@@ -43,6 +43,8 @@ private :
 
 	std::vector<sEdge> vecEdges;
 
+	std::vector<sEdge> vecEdges;
+
 	void ConvertTileMapToPolyMap(int sx, int sy, int w, int h, float fBlockWidth, int pitch) {
 		//Clear "PloyMap"
 		vecEdges.clear();
@@ -204,6 +206,12 @@ private :
 
 			}
 		}
+	}
+
+	void CalculateVisibilityPolygon(float ox, float oy, float radius) {
+	
+		
+
 	}
 public :
 
