@@ -43,8 +43,6 @@ private :
 
 	std::vector<sEdge> vecEdges;
 
-	std::vector<sEdge> vecEdges;
-
 	std::vector<std::tuple<float, float, float>> vecVisibilityPolygonPoints;
 
 	void ConvertTileMapToPolyMap(int sx, int sy, int w, int h, float fBlockWidth, int pitch) {
@@ -54,11 +52,13 @@ private :
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
 				for (int j = 0; j < 4; j++) {
-					
+
 					//Clear each node`s edge of the map
 					world[(y + sy) * pitch + (x + sx)].edge_exist[j] = false;
-					world[(y + sy) * pitch + (x + sx)].edge_id[j] = 0; 
+					world[(y + sy) * pitch + (x + sx)].edge_id[j] = 0;
 				}
+			}
+		}
 			// Iterate through region from top left to bottom right
 			//  Connet the edges of each block
 			for (int x = 1; x < w - 1; x++) {
@@ -205,9 +205,6 @@ private :
 					}
 				}
 			}
-
-			}
-		}
 	}
 
 	void CalculateVisibilityPolygon(float ox, float oy, float radius) {
@@ -250,10 +247,10 @@ private :
 
 						if (fabs(sdx - rdx) > 0.0f && fabs(sdy - rdy) > 0.0f) {
 							// t2 is normalize distance from line segment start to line segment end of intersect point
-							float t2 = (rdx * (e2.sy - oy) + (rdy * (ox - e2.sx)) / (sdx * rdy - sdy * rdx));
+							float t2 = (rdx * (e2.sy - oy) + (rdy * (ox - e2.sx))) / (sdx * rdy - sdy * rdx);
 							// t1 is normalize distance from source along ray to ray length of intersect point
 							float t1 = (e2.sx + sdx * t2 - ox) / rdx;
-
+							
 							// If intersect point exist along ray, and along line
 							// segment then interscet point is valid
 							if (t1 > 0 && t2 >= 0 && t2 <= 1.0f) {
@@ -274,6 +271,7 @@ private :
 
 					// Add intersection point to visibility polygon perimeter
 					vecVisibilityPolygonPoints.push_back({ min_ang, min_px, min_py});
+
 				}
 			}
 		}
@@ -316,9 +314,41 @@ public :
 
 		ConvertTileMapToPolyMap(0, 0, 40, 30, fBlockWidth, nWorldWidth);
 
+		if (GetMouse(1).bHeld) {
+			CalculateVisibilityPolygon(fSourceX, fSourceY, 1000.0f);
+		}
+
 		//Drawing
 
 		Clear(olc::BLACK);
+
+		if (GetMouse(1).bHeld && vecVisibilityPolygonPoints.size() > 1) {
+			
+			//Draw each triangle in fan
+			for (int i = 0; i < vecVisibilityPolygonPoints.size() - 1; i++) {
+				
+				FillTriangle(
+					fSourceX,
+					fSourceY,
+
+					std::get<1>(vecVisibilityPolygonPoints[i]),
+					std::get<2>(vecVisibilityPolygonPoints[i]),
+
+					std::get<1>(vecVisibilityPolygonPoints[i + 1]),
+					std::get<2>(vecVisibilityPolygonPoints[i + 1]));
+			}
+
+
+			FillTriangle(
+				fSourceX,
+				fSourceY,
+
+				std::get<1>(vecVisibilityPolygonPoints[vecVisibilityPolygonPoints.size() - 1]),
+				std::get<2>(vecVisibilityPolygonPoints[vecVisibilityPolygonPoints.size() - 1]),
+
+				std::get<1>(vecVisibilityPolygonPoints[0]),
+				std::get<2>(vecVisibilityPolygonPoints[0]));
+		}
 
 		//Draw Blocks from TileMap
 		for (int x = 0; x < nWorldWidth; x++) {
