@@ -322,7 +322,9 @@ public :
 
 		Clear(olc::BLACK);
 
-int nRaysCast = vecVisibilityPolygonPoints.size();
+		int nRaysCast = vecVisibilityPolygonPoints.size();
+		DrawString(4, 4, "Rays Cast: " + to_string(nRayCast));
+		
 		if (GetMouse(1).bHeld && vecVisibilityPolygonPoints.size() > 1) {
 			
 			//Draw each triangle in fan
