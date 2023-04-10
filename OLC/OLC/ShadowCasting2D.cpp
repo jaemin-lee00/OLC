@@ -238,6 +238,7 @@ private :
 
 					float min_t1 = INFINITY;
 					float min_px = 0, min_py = 0, min_ang = 0;
+					bool bValid = false;
 
 					// Check for ray intersection with all edges
 					for (auto& e2 : vecEdges) {
@@ -263,15 +264,17 @@ private :
 									min_px = ox + rdx * t1;
 									min_py = oy + rdy * t1;
 									min_ang = atan2f(min_py - oy, min_px - ox);
-									
+									bValid = true;
 								}
 							}
 						}
 					}
 
 					// Add intersection point to visibility polygon perimeter
-					vecVisibilityPolygonPoints.push_back({ min_ang, min_px, min_py});
-
+					if(bValid){
+						vecVisibilityPolygonPoints.push_back({ min_ang, min_px, min_py});
+					}
+					
 				}
 			}
 		}
