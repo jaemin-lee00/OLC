@@ -41,6 +41,10 @@ private :
 	int nWorldWidth = 40;
 	int nWorldHeight = 30;
 
+	olc::Sprite* sprLightCast;
+	olc::Sprite* buffLightRay;
+	olc::Sprite* buffLightTex;
+
 	std::vector<sEdge> vecEdges;
 
 	std::vector<std::tuple<float, float, float>> vecVisibilityPolygonPoints;
@@ -294,6 +298,24 @@ public :
 	//Involved in the intial creation of a map or object.
 	bool OnUserCreate() override {
 		world = new sCell[nWorldWidth * nWorldHeight];
+
+		// Add a boundary to the world
+		for (int x = 1; x < (nWorldWidth - 1); x++) {
+			//Line Top & bottom
+			world[1 * nWorldWidth + x].exist = true;
+			world[(nWorldHeight - 2) * nWorldWidth + x].exist = true;
+		}
+
+		for (int x = 1; x < (nWorldHeight - 1); x++) {
+			//Line Left & right
+			world[x * nWorldWidth + 1].exist = true;
+			world[x * nWorldWidth + (nWorldWidth - 2)].exist = true;
+		}
+
+		sprLightCast = new olc::Sprite("light_cast.png");
+		buffLightTex = new olc::Sprite(ScreenWidth(), ScreenHeight());
+		buffLightRay = new olc::Sprite(ScreenWidth(), ScreenHeight());
+
 		return true;
 	}
 
@@ -323,13 +345,38 @@ public :
 
 		//Drawing
 
+		SetDrawTarget(nullptr);
 		Clear(olc::BLACK);
 
 		int nRaysCast = vecVisibilityPolygonPoints.size();
-		DrawString(4, 4, "Rays Cast: " + to_string(nRayCast));
+		
+		auto it = unique(
+			vecVisibilityPolygonPoints.begin(),
+			vecVisibilityPolygonPoints.end(),
+			[&](const std::tuple<float, float, float>& t1, const std::tuple<float, float, float>& t2) {
+				return fabs(std::get<1>(t1) - std::get<1>(t2)) < 0.1f && fabs(std::get<2>(t1) - std::get<2>(t2)) < 0.1f;
+			}
+		);
+
+		vecVisibilityPolygonPoints.resize(std::distance(vecVisibilityPolygonPoints.begin(), it));
+
+		DrawString(4, 4, "Rays Cast: " + std::to_string(nRaysCast) + " Rays Drawn: " + std::to_string(nRaysCast));
 		
 		if (GetMouse(1).bHeld && vecVisibilityPolygonPoints.size() > 1) {
 			
+			// Clear offscreen buffer for sprite
+			SetDrawTarget(buffLightTex);
+			Clear(olc::BLACK);
+
+			// Draw "Radial Liight" sprite to offscreen buffer, centered around
+			// source location (the mouse coordiantes, buffer is 512x512)
+			DrawSprite(fSourceX - 255, fSourceY - 255, sprLightCast);
+
+			// Clear offscreen buffer for rays
+			SetDrawTarget(buffLightRay);
+			Clear(olc::BLACK);
+
+
 			//Draw each triangle in fan
 			for (int i = 0; i < vecVisibilityPolygonPoints.size() - 1; i++) {
 				
@@ -354,6 +401,15 @@ public :
 
 				std::get<1>(vecVisibilityPolygonPoints[0]),
 				std::get<2>(vecVisibilityPolygonPoints[0]));
+
+			// Wherever rays exist in ray sprite, copy over radial light sprite pixels
+			SetDrawTarget(nullptr);
+			for (int x = 0; x < ScreenWidth(); x++) {
+				for (int y = 0; y < ScreenHeight(); y++) {
+					if (buffLightRay->GetPixel(x, y).r > 0)
+						Draw(x, y, buffLightTex->GetPixel(x, y));
+				}
+			}
 		}
 
 		//Draw Blocks from TileMap
