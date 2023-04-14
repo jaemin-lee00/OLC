@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="RayCastingDDA.cpp">
       <Filter>Source file</Filter>
     </ClCompile>
   </ItemGroup>
