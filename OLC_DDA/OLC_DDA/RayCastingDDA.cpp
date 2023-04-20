@@ -37,6 +37,10 @@ public:
 		// Form ray cast from player into scene
 		olc::vf2d vRayStart = vPlayer;
 		olc::vf2d vRayDir = (vMouseCell - vPlayer).norm();
+		olc::vf2d vRayUnitStepSize = { sqrt(1 + (vRayDir.y / vRayDir.x) * (vRayDir.y / vRayDir.x)), sqrt(1 + (vRayDir.x / vRayDir.y) * (vRayDir.x / vRayDir.y)) };
+
+		olc::vi2d vMapCheck = vRayStart;
+		olc::vf2d vRayLength1D;
 
 		Clear(olc::BLACK);
 
