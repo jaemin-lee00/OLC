@@ -19,4 +19,9 @@
       <Filter>SourceFile</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="olcConsoleGameEngine.h">
+      <Filter>HeaderFile</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
