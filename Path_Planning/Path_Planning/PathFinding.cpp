@@ -4,7 +4,7 @@
 class OneLoneCoder_PathFinding : public olcConsoleGameEngine{
 	public:
 		OneLoneCoder_PathFinding() {
-		
+			m_sAppName = L"Path Finding";
 		}
 
 
