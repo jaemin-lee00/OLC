@@ -2,20 +2,28 @@
 #include "olcConsoleGameEngine.h"
 
 class OneLoneCoder_PathFinding : public olcConsoleGameEngine{
-	public:
+
+public:
 		OneLoneCoder_PathFinding() {
 			m_sAppName = L"Path Finding";
 		}
 
+private:
+	struct sNode {
 
-	protected:
-		virtual bool OnUserCreate() {
-			return true;
-		}
+		bool bobstacle = false;
 
-		virtual bool OnUserUpdate(float fElapsedTime) {
-			return true;
-		}
+
+	};
+
+protected:
+	virtual bool OnUserCreate() {
+		return true;
+	}
+
+	virtual bool OnUserUpdate(float fElapsedTime) {
+		return true;
+	}
 };
 
 int main() {
