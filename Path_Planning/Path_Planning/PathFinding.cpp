@@ -24,6 +24,10 @@ private:
 
 	};
 
+	sNode* nodes = nullptr;
+	int nMapWidth = 16;
+	int nMapHeight = 16;
+
 protected:
 	virtual bool OnUserCreate() {
 		return true;
