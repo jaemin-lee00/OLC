@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Pan And Zoom/Pan And Zoom.vcxproj" Id="e3a08301-3f41-4bfb-9ab8-7d8335b5b5c3" />
+</Solution>
